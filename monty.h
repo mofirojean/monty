@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stddef.h>
 
-#define INSTRUCTIONS              \
+#define BUILTIN_INSTRUCTIONS              \
 	{                           \
 		{"push", push},       \
 		    {"pall", pall},   \
@@ -75,19 +75,27 @@ stack_t *queue_node(stack_t **stack, const int n);
 void free_stack(stack_t *stack);
 size_t print_stack(const stack_t *stack);
 
-void push(stack_t **stack, unsigned int line_cnt);
-void pall(stack_t **stack, unsigned int line_cnt);
-void pint(stack_t **stack, unsigned int line_cnt);
-void swap(stack_t **stack, unsigned int line_cnt);
-void pop(stack_t **stack, unsigned int line_cnt);
-void nop(stack_t **stack, unsigned int line_cnt);
+/* stack functions for monty manipulation */
+void push(stack_t **stack, unsigned int line_count);
+void pall(stack_t **stack, unsigned int line_count);
+void pint(stack_t **stack, unsigned int line_count);
+void swap(stack_t **stack, unsigned int line_count);
+void pop(stack_t **stack, unsigned int line_count);
+void nop(stack_t **stack, unsigned int line_count);
 
-void _div(stack_t **stack, unsigned int line_cnt);
-void _add(stack_t **stack, unsigned int line_cnt);
-void _sub(stack_t **stack, unsigned int line_cnt);
-void _mul(stack_t **stack, unsigned int line_cnt);
+/* Arithmetic functions for monty manipulation */
+void _add(stack_t **stack, unsigned int line_count);
+void _sub(stack_t **stack, unsigned int line_count);
+void _mul(stack_t **stack, unsigned int line_count);
+void _div(stack_t **stack, unsigned int line_count);
 
-void opcode(stack_t **stack, char *str, unsigned int line_cnt);
+/* Executes and runs the builtin operation or opcode */
+void run_builtin(stack_t **data_structure, char *instruction,
+unsigned int line_number);
+
+/* main function declaration */
+void file_error(char *argv);
+void error_usage(void);
 
 int is_digit(char *string);
 int isnumber(char *str);

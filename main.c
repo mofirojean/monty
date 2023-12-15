@@ -1,11 +1,7 @@
 #define  _POSIX_C_SOURCE 200809L
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "monty.h"
 
-void file_error(char *argv);
-void error_usage(void);
+
 int status = 0;		/* global var declaration */
 help global;
 
@@ -50,7 +46,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 		global.argument = strtok(NULL, " \t\n");
-		opcode(&stack, str, line_cnt);
+		run_builtin(&stack, str, line_cnt);
 		line_cnt++;
 	}
 	free(buffer);
