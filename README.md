@@ -1,49 +1,79 @@
-# Monty Project (C Version)
+0x19. C - Stacks, Queues - LIFO, FIFO
 
-The Monty project is a C implementation of a Monty language interpreter. Monty is a simple, stack-based programming language that supports basic arithmetic operations, conditional statements, and loops.
+0. push, pall
+mandatory
+Implement the push and pall opcodes.
 
-## Installation
+The push opcode
 
-To install the Monty project, clone the repository and run the following command:
+The opcode push pushes an element to the stack.
 
-make
+Usage: push <int>
+where <int> is an integer
+if <int> is not an integer or if there is no argument given to push, print the error message L<line_number>: usage: push integer, followed by a new line, and exit with the status EXIT_FAILURE
+where is the line number in the file
+You won’t have to deal with overflows. Use the atoi function
+The pall opcode
 
-This will compile the project and create the `monty` executable.
+The opcode pall prints all the values on the stack, starting from the top of the stack.
 
-## Usage
+Usage pall
+Format: see example
+If the stack is empty, don’t print anything
 
-To use the Monty interpreter, run the following command:
+1. pint
+mandatory
+Implement the pint opcode.
 
-```./monty <filename>```
+The pint opcode
 
-Replace `<filename>` with the name of a Monty program file. The interpreter will execute the program and display the results.
+The opcode pint prints the value at the top of the stack, followed by a new line.
 
-## Features
+Usage: pint
+If the stack is empty, print the error message L<line_number>: can't pint, stack empty, followed by a new line, and exit with the status EXIT_FAILURE
 
-The Monty interpreter supports the following features:
+2. pop
+mandatory
+Implement the pop opcode.
 
-- Arithmetic operations: `add`, `sub`, `mul`, `div`, `mod`
-- Conditional statements: `if`, `else`, `endif`
-- Loops: `while`, `endwhile`
-- Stack operations: `push`, `pop`, `swap`, `dup`
-- Input/output: `pall`, `pint`, `pop`, `swap`, `add`, `nop`
+The pop opcode
 
-## Contributions
+The opcode pop removes the top element of the stack.
 
-We welcome contributions from other developers. If you find a bug or have a feature request, please submit an issue or pull request. To contribute, follow these steps:
+Usage: pop
+If the stack is empty, print the error message L<line_number>: can't pop an empty stack, followed by a new line, and exit with the status EXIT_FAILURE
 
-1. Fork the repository
-2. Create a new branch
-3. Make changes and commit them
-4. Push your changes to your fork
-5. Submit a pull request
+3. swap
+mandatory
+Implement the swap opcode.
 
-Please follow C99 standards and include tests for your changes.
+The swap opcode
 
-## License
+The opcode swap swaps the top two elements of the stack.
 
-This project is released under the MIT License.
+Usage: swap
+If the stack contains less than two elements, print the error message L<line_number>: can't swap, stack too short, followed by a new line, and exit with the status EXIT_FAILURE
 
-## Contact
+4. add
+mandatory
+Implement the add opcode.
 
-If you have any questions or comments, please email us at leoyoumbi83@gmail.com or visit our GitHub repository at https://github.com/Leo-Youmbi.
+The add opcode
+
+The opcode add adds the top two elements of the stack.
+
+Usage: add
+If the stack contains less than two elements, print the error message L<line_number>: can't add, stack too short, followed by a new line, and exit with the status EXIT_FAILURE
+The result is stored in the second top element of the stack, and the top element is removed, so that at the end:
+The top element of the stack contains the result
+The stack is one element shorter
+
+5. nop
+mandatory
+Implement the nop opcode.
+
+The nop opcode
+
+The opcode nop doesn’t do anything.
+
+Usage: nop
