@@ -1,12 +1,28 @@
-#ifndef	MONTY_H
-#define	MONTY_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include <stddef.h>
 
+#define INSTRUCTIONS              \
+	{                           \
+		{"push", push},       \
+		    {"pall", pall},   \
+		    {"pint", pint},   \
+		    {"pop", pop},     \
+		    {"swap", swap},   \
+		    {"div", _div},    \
+		    {"mul", _mul},    \
+		    {"add", _add},    \
+		    {"sub", _sub},    \
+		    {"nop", nop},   \
+		{                     \
+			NULL, NULL      \
+		}                     \
+	}
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -53,54 +69,26 @@ typedef struct help
 
 extern help global;
 
-#define BUILTIN_INSTRUCTIONS              \
-	{                           \
-		{"push", push},       \
-		    {"pall", pall},   \
-		    {"pint", pint},   \
-		    {"pop", pop},     \
-		    {"swap", swap},   \
-		    {"div", _div},    \
-		    {"mul", _mul},    \
-		    {"add", _add},    \
-		    {"sub", _sub},    \
-		    {"nop", nop},   \
-		{                     \
-			NULL, NULL      \
-		}                     \
-	}
-
-/* main function declaration */
-void print_file_error(char *filename);
-void print_usage_error(void);
-void run_monty_program(int argc, char **argv);
-
-/* Executes and runs the builtin operation or opcode */
-void run_builtin(stack_t **data_structure, char *instruction,
-unsigned int line_number);
-
-/* stack utility functions available in linked_list */
-stack_t *create_queue_node(stack_t **stack, const int value);
-stack_t *prepend_node(stack_t **stack, const int value);
-size_t print_stack(const stack_t *stack);
+/* stack utility functions available in linked_list.c */
+stack_t *add_node(stack_t **stack, const int n);
+stack_t *queue_node(stack_t **stack, const int n);
 void free_stack(stack_t *stack);
+size_t print_stack(const stack_t *stack);
 
-/* Arithmetic functions for monty manipulation */
-void _add(stack_t **stack, unsigned int line_count);
-void _sub(stack_t **stack, unsigned int line_count);
-void _mul(stack_t **stack, unsigned int line_count);
-void _div(stack_t **stack, unsigned int line_count);
+void push(stack_t **stack, unsigned int line_cnt);
+void pall(stack_t **stack, unsigned int line_cnt);
+void pint(stack_t **stack, unsigned int line_cnt);
+void swap(stack_t **stack, unsigned int line_cnt);
+void pop(stack_t **stack, unsigned int line_cnt);
+void nop(stack_t **stack, unsigned int line_cnt);
 
-/* Type utility dunctions for value check */
-int is_digit(char *str);
-int is_number(char *str);
+void _div(stack_t **stack, unsigned int line_cnt);
+void _add(stack_t **stack, unsigned int line_cnt);
+void _sub(stack_t **stack, unsigned int line_cnt);
+void _mul(stack_t **stack, unsigned int line_cnt);
 
-/* stack functions for monty manipulation */
-void push(stack_t **stack, unsigned int line_count);
-void pall(stack_t **stack, unsigned int line_count);
-void pint(stack_t **stack, unsigned int line_count);
-void swap(stack_t **stack, unsigned int line_count);
-void pop(stack_t **stack, unsigned int line_count);
-void nop(stack_t **stack, unsigned int line_count);
+void opcode(stack_t **stack, char *str, unsigned int line_cnt);
 
+int is_digit(char *string);
+int isnumber(char *str);
 #endif

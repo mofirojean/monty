@@ -1,17 +1,17 @@
 #include "monty.h"
 
 /**
- * push - push element into the stack
- * @stack: stack given by main
- * @line_cnt: amount of lines
+ * push - Adds an element into the stack
+ * @stack: The stack provided by main
+ * @line_cnt: The line count
  *
  * Return: void
  */
 void push(stack_t **stack, unsigned int line_cnt)
 {
-	char *n = global.argument;
+	char *value = global.argument;
 
-	if ((is_digit(n)) == 0)
+	if (!is_digit(value))
 	{
 		fprintf(stderr, "L%d: usage: push integer\n", line_cnt);
 		exit(EXIT_FAILURE);
@@ -19,24 +19,20 @@ void push(stack_t **stack, unsigned int line_cnt)
 
 	if (global.data_struct == 1)
 	{
-		if (!add_node(stack, atoi(global.argument)))
-		{
+		if (!create_queue_node(stack, atoi(value)))
 			exit(EXIT_FAILURE);
-		}
 	}
 	else
 	{
-		if (!queue_node(stack, atoi(global.argument)))
-		{
+		if (!prepend_node(stack, atoi(value)))
 			exit(EXIT_FAILURE);
-		}
 	}
 }
 
 /**
- * pall - prints the stack
- * @stack: stack given by main in start.c
- * @line_cnt: amount of lines
+ * pall - Prints the entire stack
+ * @stack: The stack provided by main
+ * @line_cnt: The line count (unused)
  *
  * Return: void
  */
@@ -46,9 +42,9 @@ void pall(stack_t **stack, unsigned int line_cnt __attribute__((unused)))
 }
 
 /**
- * pint - print the value at the top of the stack
- * @stack: stack given by main in start.c
- * @line_cnt: amount of lines
+ * pint - Prints the value at the top of the stack
+ * @stack: The stack provided by main
+ * @line_cnt: The line count
  *
  * Return: void
  */
@@ -58,18 +54,17 @@ void pint(stack_t **stack, unsigned int line_cnt)
 	{
 		fprintf(stderr, "L%d: can't pint, stack empty\n", line_cnt);
 		exit(EXIT_FAILURE);
-
 	}
 	printf("%d\n", (*stack)->n);
 }
 
 /**
-* pop - pops the very top element of the stack
-* @stack: stack given by main in start.c
-* @line_cnt: line number for error messages
-*
-* Return: void
-*/
+ * pop - Removes the top element from the stack
+ * @stack: The stack provided by main
+ * @line_cnt: The line count
+ *
+ * Return: void
+ */
 void pop(stack_t **stack, unsigned int line_cnt)
 {
 	stack_t *tmp = NULL;
@@ -84,31 +79,29 @@ void pop(stack_t **stack, unsigned int line_cnt)
 	free(*stack);
 	*stack = tmp;
 	if (!*stack)
-		return; /* prevents errors cause next line might assign a NULL */
+		return;
 	(*stack)->prev = NULL;
 }
 
 /**
- * swap -  swaps data from top to previous
- * @stack: stack given by main
- * @line_cnt: amount of lines
+ * swap - Swaps the top two elements of the stack
+ * @stack: The stack provided by main
+ * @line_cnt: The line count
  *
  * Return: void
  */
 void swap(stack_t **stack, unsigned int line_cnt)
 {
-	stack_t *tmp = NULL;
-	int tmp_n = 0;
+	stack_t *top = NULL;
 
 	if (!stack || !*stack || !((*stack)->next))
 	{
 		fprintf(stderr, "L%d: can't swap, stack too short\n", line_cnt);
 		exit(EXIT_FAILURE);
 	}
-	tmp = *stack;
-	tmp_n = tmp->n;
-	tmp->n = tmp_n;
 
-	tmp->n = tmp->next->n;
-	tmp->next->n = tmp_n;
+	top = *stack;
+	top->n = top->next->n;
+	top->next->n = top->n;
 }
+
