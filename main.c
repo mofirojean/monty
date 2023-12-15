@@ -1,15 +1,12 @@
-/*
- * Define _POSIX_C_SOURCE to enable specific POSIX
- * features or ensure compatibility with a particular
- * version of the POSIX standard (e.g., POSIX 2008).
- */
-#define _POSIX_C_SOURCE 200809L
+#define  _POSIX_C_SOURCE 200809L
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "monty.h"
 
-/* global var declaration */
-int status = 0;
-help global;
-
+void file_error(char *argv);
+void error_usage(void);
+int status = 0;		/* global var declaration */
 /**
  * main - entry point
  * @argv: list of arguments passed to our program
@@ -19,86 +16,70 @@ help global;
  */
 int main(int argc, char **argv)
 {
-	if (argc != 2)
-		print_usage_error();
-
-	run_monty_program(argc, argv);
-	return (EXIT_SUCCESS);
-}
-
-/**
- * run_monty_program - Evaluates and executes the monty code.
- * @argv: list of arguments passed to our program
- * @argc: amount of args
- *
- * Return: Void.
- */
-void run_monty_program(int argc, char **argv)
-{
 	FILE *file;
-	size_t line_length = 0;
-	char *line = NULL;
-	char *opcode = NULL;
+	size_t buf_len = 0;
+	char *buffer = NULL;
+	char *str = NULL;
 	stack_t *stack = NULL;
 	unsigned int line_cnt = 1;
 
-	global.data_struct = 1; /** Defined in monty.h */
+	global.data_struct = 1;  /* struct defined in monty.h L58*/
+	if (argc != 2)
+		error_usage(); /* def in line 82 */
+
 	file = fopen(argv[1], "r");
 
-	if (argc != 2)
-		print_usage_error();
 	if (!file)
-		print_file_error(argv[1]);
-	while (getline(&line, &line_length, file) != -1)
+		file_error(argv[1]);  /* def in line 68 */
+
+	while ((getline(&buffer, &buf_len, file)) != (-1))
 	{
-		if (*line == '\n')
+		if (status)
+			break;
+		if (*buffer == '\n')
 		{
 			line_cnt++;
 			continue;
 		}
-
-		opcode = strtok(line, " \t\n");
-
-		if (!opcode || *opcode == '#')
+		str = strtok(buffer, " \t\n");
+		if (!str || *str == '#')
 		{
 			line_cnt++;
 			continue;
 		}
-
 		global.argument = strtok(NULL, " \t\n");
-		run_builtin(&stack, opcode, line_cnt);
+		opcode(&stack, str, line_cnt);
 		line_cnt++;
 	}
-	free(line);
+	free(buffer);
 	free_stack(stack);
 	fclose(file);
 	exit(EXIT_SUCCESS);
 }
 
 /**
- * print_file_error - prints file error message and exits
- * @filename: filename of the respecive file.
+ * file_error - prints file error message and exits
+ * @argv: argv given by main()
  *
  * Desc: print msg if  not possible to open the file
  * Return: nothing
  */
-void print_file_error(char *filename)
+void file_error(char *argv)
 {
-	fprintf(stderr, "Error: Can't open file %s\n", filename);
+	fprintf(stderr, "Error: Can't open file %s\n", argv);
 	exit(EXIT_FAILURE);
 }
 
 /**
- * print_usage_error - prints usage message and exits
+ * error_usage - prints usage message and exits
  *
  * Desc: if user does not give any file or more than
  * one argument to your program
  *
  * Return: nothing
  */
-void print_usage_error(void)
+void error_usage(void)
 {
 	fprintf(stderr, "USAGE: monty file\n");
 	exit(EXIT_FAILURE);
 }
-

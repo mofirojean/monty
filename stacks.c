@@ -1,115 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "monty.h"
 
 /**
- * create_queue_node - Creates and adds a node to the end of a stack_t stack.
- * @stack: The head of the stack
- * @value: The value to be assigned to the new node
+ * queue_node - adds a node to a stack_t stack in queue_node
+ * @stack: stack head
+ * @n: number of the node
  *
- * This function creates a new node with the given value and appends it to the
- * end of the stack. If memory allocation fails, it returns NULL.
- *
- * Return: A pointer to the newly created node, or NULL on failure.
+ * Return: newly created node, if memory allocation fails, the function will
+ * return NULL.
  */
-stack_t *create_queue_node(stack_t **stack, const int value)
+stack_t *queue_node(stack_t **stack, const int n)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
-	stack_t *current;
+	stack_t *new = malloc(sizeof(stack_t));
+	stack_t *current = *stack;
 
-	if (!new_node)
+	if (!new)
+	{
+		free(new);
 		return (NULL);
-
-	new_node->n = value;
-	new_node->next = NULL;
+	}
+	new->n = n;
 
 	if (!*stack)
 	{
-		new_node->prev = NULL;
-		*stack = new_node;
-		return (new_node);
+		new->next = NULL;
+		new->prev = NULL;
+		*stack = new;
+		return (new);
 	}
 
-	current = *stack;
-
-	while (current->next)
+	while (current)
+	{
+		if (!current->next)
+		{
+			new->next = NULL;
+			new->prev = current;
+			current->next = new;
+			break;
+		}
 		current = current->next;
+	}
 
-	new_node->prev = current;
-	current->next = new_node;
-
-	return (new_node);
+	return (new);
 }
 
 /**
- * prepend_node - Adds a node to the beginning of a stack_t stack.
- * @stack: The head of the stack
- * @value: The value for the new node
+ * add_node - adds a node to the start of a stack_t stack
+ * @stack: stack head
+ * @n: number for the new node
  *
- * This function creates a new node with the provided value and adds it to the
- * start of the stack. It returns a pointer to the newly created node or NULL
- * on failure.
- *
- * Return: A pointer to the newly created node, or NULL on failure.
+ * Return: newly created node, if creation fails, the
+ * function will return NULL.
  */
-stack_t *prepend_node(stack_t **stack, const int value)
+stack_t *add_node(stack_t **stack, const int n)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
+	stack_t *new = malloc(sizeof(stack_t));
 
-	if (!new_node)
+	if (!new)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
+		free(new);
 		return (NULL);
 	}
+	new->n = n;
 
-	new_node->n = value;
-	new_node->prev = NULL;
-	new_node->next = *stack;
-
+	new->next = *stack;
+	new->prev = NULL;
 	if (*stack)
-		(*stack)->prev = new_node;
+		(*stack)->prev = new;
 
-	*stack = new_node;
+	*stack = new;
 
-	return (new_node);
+	return (new);
 }
 
 /**
- * print_stack - Prints the elements of a stack_t stack.
- * @stack: The head of the stack
+ * print_stack - prints the contents of a stack_t stack
+ * @stack: stack head
  *
- * This function prints the contents of the stack and returns the number of
- * elements present in the stack.
- *
- * Return: The number of elements in the stack.
+ * Return: number of elements of the list
  */
 size_t print_stack(const stack_t *stack)
 {
-	size_t count = 0;
+	size_t c = 0;
 
 	while (stack)
 	{
 		printf("%d\n", stack->n);
 		stack = stack->next;
-		count++;
+		c++;
 	}
 
-	return (count);
+	return (c);
 }
 
 /**
- * free_stack - Frees a stack_t linked list.
- * @stack: The head of the stack
+ * free_stack - frees a dlistint_t linked list
+ * @stack: list head
  *
- * This function frees the memory allocated for a stack_t linked list.
+ * Return: void
  */
 void free_stack(stack_t *stack)
 {
-	while (stack)
+	stack_t *current = stack;
+	stack_t *next;
+
+	if (stack)
 	{
-		stack_t *temp = stack;
-
-		stack = stack->next;
-
-		free(temp);
+		next = stack->next;
+		while (current)
+		{
+			free(current);
+			current = next;
+			if (next)
+				next = next->next;
+		}
 	}
 }
-
